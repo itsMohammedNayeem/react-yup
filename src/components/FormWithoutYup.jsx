@@ -14,9 +14,72 @@ const FormWithoutYup = () => {
     birthDate: "",
   });
 
+  const [error, setError] = useState();
+
+  const validateForm = () => {
+    let errors = {};
+
+    if (!formData.firstName) {
+      errors.firstName = "First Name is required";
+    }
+
+    if (!formData.lastName) {
+      errors.lastName = "Last Name is required";
+    }
+
+    if (!formData.email) {
+      errors.email = "Email is required";
+    }
+
+    if (!formData.phoneNumber) {
+      errors.phoneNumber = "Phone Number is required";
+    }
+
+    if (!formData.password) {
+      errors.password = "Password is required";
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required";
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    if (!formData.age) {
+      errors.age = "Age is required";
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const isValid = validateForm();
+
+    if (isValid) {
+      console.log("Form submitted", formData);
+    } else {
+      console.log("Form is not valid");
+    }
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     console.log("Form submitted");
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    let newInterests = [...formData.interests];
+    if (checked) {
+      newInterests.push(name);
+    } else {
+      newInterests = newInterests.filter((interest) => interest !== name);
+    }
+
+    setFormData({ ...formData, interests: newInterests });
   };
 
   return (
@@ -39,6 +102,7 @@ const FormWithoutYup = () => {
             type="text"
             placeholder="First Name"
             value={formData.firstName}
+            onChange={handleChange}
             name="firstName"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -55,6 +119,7 @@ const FormWithoutYup = () => {
             type="text"
             placeholder="Last Name"
             value={formData.lastName}
+            onChange={handleChange}
             name="lastName"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -71,6 +136,7 @@ const FormWithoutYup = () => {
             type="email"
             placeholder="Email"
             value={formData.email}
+            onChange={handleChange}
             name="email"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -87,6 +153,7 @@ const FormWithoutYup = () => {
             type="number"
             placeholder="Phone Number"
             value={formData.phoneNumber}
+            onChange={handleChange}
             name="phoneNumber"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -103,6 +170,7 @@ const FormWithoutYup = () => {
             type="password"
             placeholder="Password"
             value={formData.password}
+            onChange={handleChange}
             name="password"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -119,6 +187,7 @@ const FormWithoutYup = () => {
             type="password"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
+            onChange={handleChange}
             name="confirmPassword"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -135,6 +204,7 @@ const FormWithoutYup = () => {
             type="number"
             placeholder="Age"
             value={formData.age}
+            onChange={handleChange}
             name="age"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
@@ -150,6 +220,7 @@ const FormWithoutYup = () => {
           <select
             value={formData.gender}
             name="gender"
+            onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           >
             <option value="male">Male</option>
@@ -168,6 +239,7 @@ const FormWithoutYup = () => {
                 type="checkbox"
                 name="coding"
                 checked={formData.interests.includes("coding")}
+                onChange={handleCheckboxChange}
                 className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
               />
             </div>
@@ -183,6 +255,7 @@ const FormWithoutYup = () => {
                 type="checkbox"
                 name="sports"
                 checked={formData.interests.includes("sports")}
+                onChange={handleCheckboxChange}
                 className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
               />
             </div>
@@ -198,6 +271,7 @@ const FormWithoutYup = () => {
                 type="checkbox"
                 name="reading"
                 checked={formData.interests.includes("reading")}
+                onChange={handleCheckboxChange}
                 className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
               />
             </div>
@@ -219,6 +293,7 @@ const FormWithoutYup = () => {
           <input
             type="date"
             value={formData.birthDate}
+            onChange={handleChange}
             name="birthDate"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
