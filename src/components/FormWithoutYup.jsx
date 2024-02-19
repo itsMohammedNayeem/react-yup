@@ -16,6 +16,28 @@ const FormWithoutYup = () => {
 
   const [error, setError] = useState();
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // return /^\S+@\S+\.\S+$/.test(email);
+  };
+
+  const isValidPassword = (password) => {
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const numberRegex = /[0-9]/;
+    const upperCaseRegex = /[A-Z]/;
+    const lowerCaseRegex = /[a-z]/;
+    return (
+      password.length >= 8 &&
+      symbolRegex.test(password) &&
+      numberRegex.test(password) &&
+      upperCaseRegex.test(password) &&
+      lowerCaseRegex.test(password)
+    );
+    // return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(
+    //   password
+    // );
+  };
+
   const validateForm = () => {
     let errors = {};
 
@@ -29,18 +51,28 @@ const FormWithoutYup = () => {
 
     if (!formData.email) {
       errors.email = "Email is required";
+    } else if (!isValidEmail(formData.email)) {
+      errors.email = "Invalid email format";
     }
 
     if (!formData.phoneNumber) {
       errors.phoneNumber = "Phone Number is required";
+    } else if (formData.phoneNumber.length !== 10) {
+      errors.phoneNumber = "Phone Number should be 10 digits";
     }
 
     if (!formData.password) {
       errors.password = "Password is required";
+    } else if (!isValidPassword(formData.password)) {
+      errors.password =
+        "Password should contain at least 8 characters, 1 number, 1 symbol, 1 uppercase and 1 lowercase letter";
     }
 
     if (!formData.confirmPassword) {
       errors.confirmPassword = "Confirm Password is required";
+    } else if (!isValidPassword(formData.password)) {
+      errors.password =
+        "Password should contain at least 8 characters, 1 number, 1 symbol, 1 uppercase and 1 lowercase letter";
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -49,7 +81,26 @@ const FormWithoutYup = () => {
 
     if (!formData.age) {
       errors.age = "Age is required";
+    } else if (formData.age <= 18 || formData.age >= 100) {
+      errors.age =
+        "You must be at least 18 years old and not older than 100 years";
     }
+
+    if (!formData.gender) {
+      errors.gender = "Gender is required";
+    }
+
+    if (formData.interests.length === 0) {
+      errors.interests = "At least one interest is required";
+    }
+
+    if (!formData.birthDate) {
+      errors.birthDate = "Birth Date is required";
+    }
+
+    setError(errors);
+
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = (e) => {
@@ -106,6 +157,9 @@ const FormWithoutYup = () => {
             name="firstName"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.firstName && (
+            <div className="mt-2 text-xs text-red-500">{error.firstName}</div>
+          )}
         </div>
 
         <div>
@@ -123,6 +177,9 @@ const FormWithoutYup = () => {
             name="lastName"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.lastName && (
+            <div className="mt-2 text-xs text-red-500">{error.lastName}</div>
+          )}
         </div>
 
         <div>
@@ -140,6 +197,9 @@ const FormWithoutYup = () => {
             name="email"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.email && (
+            <div className="mt-2 text-xs text-red-500">{error.email}</div>
+          )}
         </div>
 
         <div>
@@ -157,6 +217,9 @@ const FormWithoutYup = () => {
             name="phoneNumber"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.phoneNumber && (
+            <div className="mt-2 text-xs text-red-500">{error.phoneNumber}</div>
+          )}
         </div>
 
         <div>
@@ -174,11 +237,14 @@ const FormWithoutYup = () => {
             name="password"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.password && (
+            <div className="mt-2 text-xs text-red-500">{error.password}</div>
+          )}
         </div>
 
         <div>
           <label
-            htmlFor="password"
+            htmlFor="confirmPassword"
             className="block text-sm font-medium text-gray-700"
           >
             Confirm Password :
@@ -191,6 +257,11 @@ const FormWithoutYup = () => {
             name="confirmPassword"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.confirmPassword && (
+            <div className="mt-2 text-xs text-red-500">
+              {error.confirmPassword}
+            </div>
+          )}
         </div>
 
         <div>
@@ -208,6 +279,9 @@ const FormWithoutYup = () => {
             name="age"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.age && (
+            <div className="mt-2 text-xs text-red-500">{error.age}</div>
+          )}
         </div>
 
         <div>
@@ -227,6 +301,9 @@ const FormWithoutYup = () => {
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
+          {error.gender && (
+            <div className="mt-2 text-xs text-red-500">{error.gender}</div>
+          )}
         </div>
 
         <fieldset className="space-y-5">
@@ -281,6 +358,9 @@ const FormWithoutYup = () => {
               </label>
             </div>
           </div>
+          {error.interests && (
+            <div className="mt-2 text-xs text-red-500">{error.interests}</div>
+          )}
         </fieldset>
 
         <div>
@@ -297,6 +377,9 @@ const FormWithoutYup = () => {
             name="birthDate"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
+          {error.birthDate && (
+            <div className="mt-2 text-xs text-red-500">{error.birthDate}</div>
+          )}
         </div>
 
         <button

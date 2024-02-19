@@ -2,7 +2,7 @@ import FormWithoutYup from "./components/FormWithoutYup";
 
 function App() {
   return (
-    <div className="font-mono items-center text-center justify-center">
+    <div className="font-mono items-center justify-center">
       <FormWithoutYup />
     </div>
   );
